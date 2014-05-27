@@ -59,7 +59,7 @@ def queryBuffer(buff):
         for i in features['features']:
             propdata = dict(i['attributes'].items() + getAppraisal(i['attributes']['OBJECTID'],i['attributes']['STANPAR']).items())
             scraperwiki.sqlite.save(unique_keys=["OBJECTID"],data=propdata,table_name="properties")
-        print repr(len(features['features'])+1) + " features saved."
+        print repr(len(features['features'])) + " features saved."
 
 def queryBufferById(buffId):
         i = 0
@@ -239,5 +239,5 @@ def getAppraisal(objectID,parcelID):
     # owner, street, parcelID, lastsaleprice, lastsaledate, totalval, landval, impval, acres, sqft, year, foundation, siding, rooms, bedrooms, fullbaths, halfbaths, fixtures
 scraperwiki.sqlite.execute("drop table 'properties'")
 scraperwiki.sqlite.commit()
-getParcelFeature("11714006400",250)
+getParcelFeature("11714006400",5280)
 #getAppraisal(1,11715004802)
