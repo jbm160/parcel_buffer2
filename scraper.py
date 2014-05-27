@@ -178,12 +178,12 @@ def getAppraisal(objectID,parcelID):
         record = lxml.html.parse(opener.open(newURL)).getroot()
 #        print "Response 2: \n" + lxml.etree.tostring(record)
         fields = record.cssselect('td')
-        if fields[2].text_content().strip() <> "Card 1 of 1":
+        if fields[2].text_content().strip() == "Card 1 of 1":
             propdata = {}
             card = lxml.html.parse(opener.open("http://www.padctnwebpro.com/WebproNashville/RecordCard.asp")).getroot()
             data = card.cssselect('td')
             print fields[2].text_content().strip()
-            j = True
+            j = False
             if j:
                 i = 0
                 while i < len(data):
@@ -193,6 +193,30 @@ def getAppraisal(objectID,parcelID):
             propdata['LandVal'] = data[51].text_content().strip()
             propdata['BldgVal'] = data[56].text_content().strip()
             propdata['TotalVal'] = data[54].text_content().strip()
+            propdata['numUnits'] = data[67].text_content().strip()
+            propdata['finSqFt'] = data[81].text_content().strip()
+        else:
+            print "More than one card detected."
+            numPages = int(fields[2].text_content().strip().split(" of ")[1])
+            propdata = {}
+            card = lxml.html.parse(opener.open("http://www.padctnwebpro.com/WebproNashville/RecordCard.asp")).getroot()
+            data = card.cssselect('td')
+            propdata['LandVal'] = int(data[51].text_content().strip())
+            propdata['BldgVal'] = int(data[56].text_content().strip())
+            propdata['TotalVal'] = int(data[54].text_content().strip())
+            propdata['numUnits'] = int(data[67].text_content().strip())
+            propdata['finSqFt'] = int(data[81].text_content().strip())
+            i = 2
+            print "After Card 1, propdata = " + repr(propdata)
+            while i <= numPages:
+                newURL2 = "http://www.padctnwebpro.com/WebproNashville/Summary-bottom.asp?Card=" + repr(i)
+                record2 = lxml.html.parse(opener.open(newURL2)).getroot()
+                card = lxml.html.parse(opener.open("http://www.padctnwebpro.com/WebproNashville/RecordCard.asp")).getroot()
+                data = card.cssselect('td')
+                propdata['numUnits'] += int(data[67].text_content().strip())
+                propdata['finSqFt'] += int(data[81].text_content().strip())
+                i += 1
+            print "After Card " + repr(i) + ", propdata = " + repr(propdata)
 #        neighborhood = fields[49].text_content().strip()
 #        apprData = {'parcelID': parcelID,
 #            'neighborhood': neighborhood}
