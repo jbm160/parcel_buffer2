@@ -168,7 +168,7 @@ def getAppraisal(objectID,parcelID):
         print "Getting appraisal data for parcel " + parcelID + "."
 #    try:
     # print "propID = " + propID + "."
-        pageURL = "http://www.padctnwebpro.com/WebproNashville/searchResults.asp?cboSearchType=Parcel&SearchVal1=" + repr(parcelID).encode('ascii')
+        pageURL = "http://www.padctnwebpro.com/WebproNashville/searchResults.asp?cboSearchType=Parcel&SearchVal1=" + parcelID
         cj = cookielib.CookieJar()
         opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(cj))
         html = lxml.html.parse(opener.open(pageURL)).getroot()
