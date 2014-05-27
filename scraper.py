@@ -36,8 +36,11 @@ def strtoint(s):
         try:
             return int(s.replace(',',''))
         except:
-            print "Couldn't convert " + s + " to an integer."
-            return 0
+            try:
+                return float(s.replace(',',''))
+            except:
+                print "Couldn't convert " + s + " to an integer or float."
+                return 0
 
 def queryBuffer(buff):
         qparams = {}
