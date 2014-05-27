@@ -163,7 +163,7 @@ def getParcelFeature(parcelID,distance):
 #getParcelFeature("11714006400",1000)
       
 def getAppraisal(objectID,parcelID):
-    try:
+#    try:
     # print "propID = " + propID + "."
         pageURL = "http://www.padctnwebpro.com/WebproNashville/searchResults.asp?cboSearchType=Parcel&SearchVal1=" + propID
         cj = cookielib.CookieJar()
@@ -187,8 +187,8 @@ def getAppraisal(objectID,parcelID):
 #        apprData = {'parcelID': parcelID,
 #            'neighborhood': neighborhood}
 #        scraperwiki.sqlite.save(unique_keys=["parcelID"], data=apprData, table_name="Districts")
-    except:
-        print "Could not get appraisal info for parcelID " + parcelID
+#    except:
+#        print "Could not get appraisal info for parcelID " + parcelID
             
     # owner, street, parcelID, lastsaleprice, lastsaledate, totalval, landval, impval, acres, sqft, year, foundation, siding, rooms, bedrooms, fullbaths, halfbaths, fixtures
 
