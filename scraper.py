@@ -53,7 +53,7 @@ def queryBuffer(buff):
 # print "Number of parcels returned: " + r3.text
 # print "r3.url = " + repr(r3.url)
         for i in features['features']:
-            propdata = dict(i['attributes'].items() + getAppraisal(i['attributes']['OBJECTID'],i['attributes']['STANPAR']))
+            propdata = dict(i['attributes'].items() + getAppraisal(i['attributes']['OBJECTID'],i['attributes']['STANPAR']).items())
             scraperwiki.sqlite.save(unique_keys=["OBJECTID"],data=propdata,table_name="properties")
         print repr(len(features['features'])+1) + " features saved."
 
@@ -80,7 +80,7 @@ def queryBufferById(buffId):
 #       print "Number of parcels returned: " + r3.text
 #       print "r3.url = " + repr(r3.url)
         for i in features['features']:
-            propdata = dict(i['attributes'].items() + getAppraisal(i['attributes']['OBJECTID'],i['attributes']['STANPAR']))
+            propdata = dict(i['attributes'].items() + getAppraisal(i['attributes']['OBJECTID'],i['attributes']['STANPAR']).items())
             scraperwiki.sqlite.save(unique_keys=["OBJECTID"],data=propdata,table_name="properties")
         print "Processed " + repr(len(features['features'])) + " features with this query."
 
