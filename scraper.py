@@ -179,12 +179,20 @@ def getAppraisal(objectID,parcelID):
 #        print "Response 2: \n" + lxml.etree.tostring(record)
         fields = record.cssselect('td')
         if fields[2].text_content().strip() <> "Card 1 of 1":
+            propdata = {}
             card = lxml.html.parse(opener.open("http://www.padctnwebpro.com/WebproNashville/RecordCard.asp")).getroot()
             data = card.cssselect('td')
-            i = 0
-            while i < len(data):
-                print "data[" + repr(i) + "]: " + data[i].text_content().strip().encode('ascii','ignore')
-                i += 1
+            print fields[2].text_content().strip()
+            j = True
+            if j = True:
+                i = 0
+                while i < len(data):
+                    if data[i].text_content().strip().encode('ascii','ignore').find("\n") == -1:
+                        print "data[" + repr(i) + "]: " + data[i].text_content().strip().encode('ascii','ignore')
+                    i += 1
+            propdata['LandVal'] = data[51].text_content().strip()
+            propdata['BldgVal'] = data[56].text_content().strip()
+            propdata['TotalVal'] = data[54].text_content().strip()
 #        neighborhood = fields[49].text_content().strip()
 #        apprData = {'parcelID': parcelID,
 #            'neighborhood': neighborhood}
