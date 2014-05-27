@@ -55,9 +55,14 @@ def queryBuffer(buff):
         print repr(len(features['features'])) + " features saved."
 
 def queryBufferById(buffId):
+        i = 0
         qparams = {}
         qparams['f'] = "json"
-        qparams['where'] = "OBJECTID IN " + json.dumps(buffId)
+        qparams['where'] = "OBJECTID IN ("
+        while i < len(buffId)-1:
+            qparams['where'] += "'" + buffId[i] + "',"
+            i++
+        qparams['where'] += "'" + buffId[i] + "')"
         qparams['returnGeometry'] = False;
         qparams['outFields'] = "OBJECTID,STANPAR,OWNER,PROP_ADDR,PROP_CITY,PROP_ZIP,LAND_USE,ACREAGE"
         qparams['outSR'] = 2274
@@ -66,8 +71,7 @@ def queryBufferById(buffId):
         queryURL = "http://maps.nashville.gov/MetGIS/rest/services/Basemaps/Parcels/MapServer/0/query"
 #        print "buffId = " + json.dumps(buffId)
         r3 = requests.post(queryURL, data=qparams)
-        print "json.dumps(buffId) = " + json.dumps(buffId)
-        print "repr(buffId) = " + repr(buffId)
+        print "qparams['where'] = " + qparams['where']
         print "r3.text = " + repr(r3.text)
         features = r3.json()
 #       print "Number of parcels returned: " + r3.text
