@@ -181,6 +181,7 @@ def getAppraisal(objectID,parcelID):
         if fields[2].text_content().strip() <> "Card 1 of 1":
             card = lxml.html.parse(opener.open("http://www.padctnwebpro.com/WebproNashville/RecordCard.asp")).getroot()
             data = card.cssselect('td')
+            i = 0
             while i < len(data):
                 print "data[i]: " + repr(data[i])
                 i += 1
