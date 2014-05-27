@@ -32,6 +32,8 @@ import xlrd
 import cookielib, urllib2, urllib
 import requests
 
+def strtoint(s):
+        return int(s.replace(',',''))
 
 def queryBuffer(buff):
         qparams = {}
@@ -190,22 +192,22 @@ def getAppraisal(objectID,parcelID):
                     if data[i].text_content().strip().encode('ascii','ignore').find("\n") == -1:
                         print "data[" + repr(i) + "]: " + data[i].text_content().strip().encode('ascii','ignore')
                     i += 1
-            propdata['LandVal'] = data[51].text_content().strip()
-            propdata['BldgVal'] = data[56].text_content().strip()
-            propdata['TotalVal'] = data[54].text_content().strip()
-            propdata['numUnits'] = data[67].text_content().strip()
-            propdata['finSqFt'] = data[81].text_content().strip()
+            propdata['LandVal'] = strtoint(data[51].text_content().strip())
+            propdata['BldgVal'] = strtoint(data[56].text_content().strip())
+            propdata['TotalVal'] = strtoint(data[54].text_content().strip())
+            propdata['numUnits'] = strtoint(data[67].text_content().strip())
+            propdata['finSqFt'] = strtoint(data[81].text_content().strip())
         else:
             print "More than one card detected."
             numPages = int(fields[2].text_content().strip().split(" of ")[1])
             propdata = {}
             card = lxml.html.parse(opener.open("http://www.padctnwebpro.com/WebproNashville/RecordCard.asp")).getroot()
             data = card.cssselect('td')
-            propdata['LandVal'] = int(data[51].text_content().strip())
-            propdata['BldgVal'] = int(data[56].text_content().strip())
-            propdata['TotalVal'] = int(data[54].text_content().strip())
-            propdata['numUnits'] = int(data[67].text_content().strip())
-            propdata['finSqFt'] = int(data[81].text_content().strip())
+            propdata['LandVal'] = strtoint(data[51].text_content().strip())
+            propdata['BldgVal'] = strtoint(data[56].text_content().strip())
+            propdata['TotalVal'] = strtoint(data[54].text_content().strip())
+            propdata['numUnits'] = strtoint(data[67].text_content().strip())
+            propdata['finSqFt'] = strtoint(data[81].text_content().strip())
             i = 2
             print "After Card 1, propdata = " + repr(propdata)
             while i <= numPages:
@@ -213,8 +215,8 @@ def getAppraisal(objectID,parcelID):
                 record2 = lxml.html.parse(opener.open(newURL2)).getroot()
                 card = lxml.html.parse(opener.open("http://www.padctnwebpro.com/WebproNashville/RecordCard.asp")).getroot()
                 data = card.cssselect('td')
-                propdata['numUnits'] += int(data[67].text_content().strip())
-                propdata['finSqFt'] += int(data[81].text_content().strip())
+                propdata['numUnits'] += strtoint(data[67].text_content().strip())
+                propdata['finSqFt'] += strtoint(data[81].text_content().strip())
                 i += 1
             print "After Card " + repr(i) + ", propdata = " + repr(propdata)
 #        neighborhood = fields[49].text_content().strip()
