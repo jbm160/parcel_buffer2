@@ -88,6 +88,7 @@ def queryBufferCount(buff):
         r3 = requests.post(queryURL, data=qparams)
 # print "r3.text = " + repr(r3.text)
         features = r3.json()
+        print repr(len(features['objectIds'])) + " features identified."
         if len(features['objectIds']) > 500:
             j = 0
             while j < len(features['objectIds']):
@@ -95,7 +96,7 @@ def queryBufferCount(buff):
                 print "Getting objectIds " + repr(j+1) + " thru " + repr(j+50) + "."
                 queryBufferById(buff)
                 j += 50
-            buff = features['objectIds'][j:features['objectIds']-1]
+            buff = features['objectIds'][j:(len(features['objectIds'])-1)]
             print "Getting objectIds " + repr(j+1) + " thru " + repr(len(features['objectIds'])) + "."
             queryBufferById(buff)
             print repr(len(features['objectIds'])) + " features saved."
