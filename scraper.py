@@ -52,7 +52,7 @@ def queryBuffer(buff):
 # print "r3.url = " + repr(r3.url)
         for i in features['features']:
             scraperwiki.sqlite.save(unique_keys=["OBJECTID"],data=i['attributes'],table_name="properties")
-        print repr(len(features['features'])) + " features saved."
+        print repr(len(features['features'])+1) + " features saved."
 
 def queryBufferById(buffId):
         i = 0
@@ -160,9 +160,9 @@ def getParcelFeature(parcelID,distance):
             getGeoBuffer(feat['features'][0]['geometry'],distance)
             #print "testing"
 
-getParcelFeature("11714006400",1900)
+#getParcelFeature("11714006400",1000)
       
-def getAppraisal(propID,parcelID):
+def getAppraisal(objectID,parcelID):
     try:
     # print "propID = " + propID + "."
         pageURL = "http://www.padctnwebpro.com/WebproNashville/searchResults.asp?cboSearchType=Parcel&SearchVal1=" + propID
@@ -171,17 +171,25 @@ def getAppraisal(propID,parcelID):
         html = lxml.html.parse(opener.open(pageURL)).getroot()
     # print html.text_content()
         links = html.cssselect('a')
-        newURL = "http://www.padctnwebpro.com/WebproNashville/" + links[0].get('href')
+#        newURL = "http://www.padctnwebpro.com/WebproNashville/" + links[0].get('href')
+        newURL = "http://www.padctnwebpro.com/WebproNashville/Summary-bottom.asp?Card=1"
 
 #summary-bottom.asp?A1=2337573&A2=1
-        record = lxml.html.parse(opener.open(newURL.replace("Summary","summary-bottom"))).getroot()
+        record = lxml.html.parse(opener.open(newURL)).getroot()
         fields = record.cssselect('td')
-        neighborhood = fields[49].text_content().strip()
-        apprData = {'parcelID': parcelID,
-            'neighborhood': neighborhood}
-        scraperwiki.sqlite.save(unique_keys=["parcelID"], data=apprData, table_name="Districts")
+        if fields[2].text_content().strip() == "Card 1 of 1":
+            card = lxml.html.parse(opener.open("http://www.padctnwebpro.com/WebproNashville/RecordCard.asp")).getroot()
+            data = card.cssselect('td')
+            do while i < len(data):
+                print "data[i]: " + repr(data[i])
+                i += 1
+#        neighborhood = fields[49].text_content().strip()
+#        apprData = {'parcelID': parcelID,
+#            'neighborhood': neighborhood}
+#        scraperwiki.sqlite.save(unique_keys=["parcelID"], data=apprData, table_name="Districts")
     except:
-        print "Could not get appraisal info for parcelID " + parcelID + " at " + address
+        print "Could not get appraisal info for parcelID " + parcelID
             
     # owner, street, parcelID, lastsaleprice, lastsaledate, totalval, landval, impval, acres, sqft, year, foundation, siding, rooms, bedrooms, fullbaths, halfbaths, fixtures
 
+getAppraisal(1,11715004802)
