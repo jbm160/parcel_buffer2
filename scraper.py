@@ -176,7 +176,7 @@ def getAppraisal(objectID,parcelID):
         cj = cookielib.CookieJar()
         opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(cj))
         html = lxml.html.parse(opener.open(pageURL)).getroot()
-        print "breadcrumb 1"
+#        print "breadcrumb 1"
 #        print "Response 1: \n" + lxml.etree.tostring(html)
         links = html.cssselect('a')
 #        newURL = "http://www.padctnwebpro.com/WebproNashville/" + links[0].get('href')
@@ -184,10 +184,9 @@ def getAppraisal(objectID,parcelID):
 
 #summary-bottom.asp?A1=2337573&A2=1
         record = lxml.html.parse(opener.open(newURL)).getroot()
-        print "breadcrumb 2"
+#        print "breadcrumb 2"
 #        print "Response 2: \n" + lxml.etree.tostring(record)
         fields = record.cssselect('td')
-        print "More than one card detected."
         numPages = int(fields[2].text_content().strip().split(" of ")[1])
         propdata = {}
         card = lxml.html.parse(opener.open("http://www.padctnwebpro.com/WebproNashville/RecordCard.asp")).getroot()
@@ -199,6 +198,7 @@ def getAppraisal(objectID,parcelID):
         propdata['finSqFt'] = strtoint(data[81].text_content().strip())
         i = 1
         if numPages > 1:
+            print "More than one card detected."
             i = 2
 #            print "After Card 1, propdata = " + repr(propdata)
             while i <= numPages:
