@@ -244,7 +244,7 @@ def getAppraisal(objectID,parcelID):
 #        print "Could not get appraisal info for parcelID " + parcelID
             
     # owner, street, parcelID, lastsaleprice, lastsaledate, totalval, landval, impval, acres, sqft, year, foundation, siding, rooms, bedrooms, fullbaths, halfbaths, fixtures
-scraperwiki.sqlite.execute("drop table 'properties'")
-scraperwiki.sqlite.commit()
+#scraperwiki.sqlite.execute("drop table 'properties'")
+#scraperwiki.sqlite.commit()
 getParcelFeature("11714006400",5280)
 #getAppraisal(1,11715004802)
