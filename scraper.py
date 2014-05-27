@@ -53,7 +53,8 @@ def queryBuffer(buff):
 # print "Number of parcels returned: " + r3.text
 # print "r3.url = " + repr(r3.url)
         for i in features['features']:
-            scraperwiki.sqlite.save(unique_keys=["OBJECTID"],data=i['attributes'],table_name="properties")
+            propdata = dict(i['attributes'].items() + getAppraisal(i['attributes']['OBJECTID'],i['attributes']['STANPAR']))
+            scraperwiki.sqlite.save(unique_keys=["OBJECTID"],data=propdata,table_name="properties")
         print repr(len(features['features'])+1) + " features saved."
 
 def queryBufferById(buffId):
@@ -79,7 +80,8 @@ def queryBufferById(buffId):
 #       print "Number of parcels returned: " + r3.text
 #       print "r3.url = " + repr(r3.url)
         for i in features['features']:
-            scraperwiki.sqlite.save(unique_keys=["OBJECTID"],data=i['attributes'],table_name="properties")
+            propdata = dict(i['attributes'].items() + getAppraisal(i['attributes']['OBJECTID'],i['attributes']['STANPAR']))
+            scraperwiki.sqlite.save(unique_keys=["OBJECTID"],data=propdata,table_name="properties")
         print "Processed " + repr(len(features['features'])) + " features with this query."
 
 def queryBufferCount(buff):
@@ -162,9 +164,8 @@ def getParcelFeature(parcelID,distance):
             getGeoBuffer(feat['features'][0]['geometry'],distance)
             #print "testing"
 
-#getParcelFeature("11714006400",1000)
-      
 def getAppraisal(objectID,parcelID):
+        print "Getting appraisal data for parcel " + repr(parcelID) + "."
 #    try:
     # print "propID = " + propID + "."
         pageURL = "http://www.padctnwebpro.com/WebproNashville/searchResults.asp?cboSearchType=Parcel&SearchVal1=" + repr(parcelID)
@@ -180,45 +181,47 @@ def getAppraisal(objectID,parcelID):
         record = lxml.html.parse(opener.open(newURL)).getroot()
 #        print "Response 2: \n" + lxml.etree.tostring(record)
         fields = record.cssselect('td')
-        if fields[2].text_content().strip() == "Card 1 of 1":
-            propdata = {}
+        print "More than one card detected."
+        numPages = int(fields[2].text_content().strip().split(" of ")[1])
+        propdata = {}
+        card = lxml.html.parse(opener.open("http://www.padctnwebpro.com/WebproNashville/RecordCard.asp")).getroot()
+        data = card.cssselect('td')
+        propdata['LandVal'] = strtoint(data[51].text_content().strip())
+        propdata['BldgVal'] = strtoint(data[56].text_content().strip())
+        propdata['TotalVal'] = strtoint(data[54].text_content().strip())
+        propdata['numUnits'] = strtoint(data[67].text_content().strip())
+        propdata['finSqFt'] = strtoint(data[81].text_content().strip())
+        i = 1
+        if numPages > 1 i = 2
+#            print "After Card 1, propdata = " + repr(propdata)
+        while i <= numPages:
+            newURL2 = "http://www.padctnwebpro.com/WebproNashville/Summary-bottom.asp?Card=" + repr(i)
+            record2 = lxml.html.parse(opener.open(newURL2)).getroot()
             card = lxml.html.parse(opener.open("http://www.padctnwebpro.com/WebproNashville/RecordCard.asp")).getroot()
             data = card.cssselect('td')
-            print fields[2].text_content().strip()
-            j = False
-            if j:
-                i = 0
-                while i < len(data):
-                    if data[i].text_content().strip().encode('ascii','ignore').find("\n") == -1:
-                        print "data[" + repr(i) + "]: " + data[i].text_content().strip().encode('ascii','ignore')
-                    i += 1
-            propdata['LandVal'] = strtoint(data[51].text_content().strip())
-            propdata['BldgVal'] = strtoint(data[56].text_content().strip())
-            propdata['TotalVal'] = strtoint(data[54].text_content().strip())
-            propdata['numUnits'] = strtoint(data[67].text_content().strip())
-            propdata['finSqFt'] = strtoint(data[81].text_content().strip())
-        else:
-            print "More than one card detected."
-            numPages = int(fields[2].text_content().strip().split(" of ")[1])
-            propdata = {}
-            card = lxml.html.parse(opener.open("http://www.padctnwebpro.com/WebproNashville/RecordCard.asp")).getroot()
-            data = card.cssselect('td')
-            propdata['LandVal'] = strtoint(data[51].text_content().strip())
-            propdata['BldgVal'] = strtoint(data[56].text_content().strip())
-            propdata['TotalVal'] = strtoint(data[54].text_content().strip())
-            propdata['numUnits'] = strtoint(data[67].text_content().strip())
-            propdata['finSqFt'] = strtoint(data[81].text_content().strip())
-            i = 2
-            print "After Card 1, propdata = " + repr(propdata)
-            while i <= numPages:
-                newURL2 = "http://www.padctnwebpro.com/WebproNashville/Summary-bottom.asp?Card=" + repr(i)
-                record2 = lxml.html.parse(opener.open(newURL2)).getroot()
-                card = lxml.html.parse(opener.open("http://www.padctnwebpro.com/WebproNashville/RecordCard.asp")).getroot()
-                data = card.cssselect('td')
-                propdata['numUnits'] += strtoint(data[67].text_content().strip())
-                propdata['finSqFt'] += strtoint(data[81].text_content().strip())
-                i += 1
-            print "After Card " + repr(i) + ", propdata = " + repr(propdata)
+            propdata['numUnits'] += strtoint(data[67].text_content().strip())
+            propdata['finSqFt'] += strtoint(data[81].text_content().strip())
+            i += 1
+        return(propdata)
+#            print "After Card " + repr(i) + ", propdata = " + repr(propdata)
+#        if fields[2].text_content().strip() == "Card 1 of 1":
+#            propdata = {}
+#            card = lxml.html.parse(opener.open("http://www.padctnwebpro.com/WebproNashville/RecordCard.asp")).getroot()
+#            data = card.cssselect('td')
+#            print fields[2].text_content().strip()
+#            j = False
+#            if j:
+#                i = 0
+#                while i < len(data):
+#                    if data[i].text_content().strip().encode('ascii','ignore').find("\n") == -1:
+#                        print "data[" + repr(i) + "]: " + data[i].text_content().strip().encode('ascii','ignore')
+#                    i += 1
+#            propdata['LandVal'] = strtoint(data[51].text_content().strip())
+#            propdata['BldgVal'] = strtoint(data[56].text_content().strip())
+#            propdata['TotalVal'] = strtoint(data[54].text_content().strip())
+#            propdata['numUnits'] = strtoint(data[67].text_content().strip())
+#            propdata['finSqFt'] = strtoint(data[81].text_content().strip())
+#        else:
 #        neighborhood = fields[49].text_content().strip()
 #        apprData = {'parcelID': parcelID,
 #            'neighborhood': neighborhood}
@@ -228,4 +231,5 @@ def getAppraisal(objectID,parcelID):
             
     # owner, street, parcelID, lastsaleprice, lastsaledate, totalval, landval, impval, acres, sqft, year, foundation, siding, rooms, bedrooms, fullbaths, halfbaths, fixtures
 
-getAppraisal(1,11715004802)
+getParcelFeature("11714006400",250)
+#getAppraisal(1,11715004802)
