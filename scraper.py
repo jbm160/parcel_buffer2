@@ -33,7 +33,11 @@ import cookielib, urllib2, urllib
 import requests
 
 def strtoint(s):
-        return int(s.replace(',',''))
+        try:
+            return int(s.replace(',',''))
+        except:
+            print "Couldn't convert " + s + " to an integer."
+            return 0
 
 def queryBuffer(buff):
         qparams = {}
