@@ -78,7 +78,7 @@ def queryBufferById(buffId):
 #       print "r3.url = " + repr(r3.url)
         for i in features['features']:
             scraperwiki.sqlite.save(unique_keys=["OBJECTID"],data=i['attributes'],table_name="properties")
-        print "Processed " + repr(len(features['features'])) " features with this query."
+        print "Processed " + repr(len(features['features'])) + " features with this query."
 
 def queryBufferCount(buff):
         qparams = {}
