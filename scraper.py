@@ -192,7 +192,8 @@ def getAppraisal(objectID,parcelID):
         propdata['numUnits'] = strtoint(data[67].text_content().strip())
         propdata['finSqFt'] = strtoint(data[81].text_content().strip())
         i = 1
-        if numPages > 1 i = 2
+        if numPages > 1:
+            i = 2
 #            print "After Card 1, propdata = " + repr(propdata)
         while i <= numPages:
             newURL2 = "http://www.padctnwebpro.com/WebproNashville/Summary-bottom.asp?Card=" + repr(i)
