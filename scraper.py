@@ -60,9 +60,9 @@ def queryBufferById(buffId):
         qparams['f'] = "json"
         qparams['where'] = "OBJECTID IN ("
         while i < len(buffId)-1:
-            qparams['where'] += "'" + buffId[i] + "',"
+            qparams['where'] += "'" + repr(buffId[i]) + "',"
             i += 1
-        qparams['where'] += "'" + buffId[i] + "')"
+        qparams['where'] += "'" + repr(buffId[i]) + "')"
         qparams['returnGeometry'] = False;
         qparams['outFields'] = "OBJECTID,STANPAR,OWNER,PROP_ADDR,PROP_CITY,PROP_ZIP,LAND_USE,ACREAGE"
         qparams['outSR'] = 2274
