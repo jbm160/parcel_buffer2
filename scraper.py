@@ -172,9 +172,10 @@ def getParcelFeature(parcelID,distance):
             #print "testing"
 
 def getAppraisal(objectID,parcelID):
-        print "Getting appraisal data for parcel " + parcelID + "."
+    print "Getting appraisal data for parcel " + parcelID + "."
 #    try:
     # print "propID = " + propID + "."
+    try:
         pageURL = "http://www.padctnwebpro.com/WebproNashville/searchResults.asp?cboSearchType=Parcel&SearchVal1=" + parcelID
         cj = cookielib.CookieJar()
         opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(cj))
@@ -213,6 +214,9 @@ def getAppraisal(objectID,parcelID):
                 propdata['finSqFt'] += strtoint(data[81].text_content().strip())
                 i += 1
         return(propdata)
+    except:
+        print "Couldn't get an appraisal record card for parcel " + parcelID + "."
+        return({})
 #            print "After Card " + repr(i) + ", propdata = " + repr(propdata)
 #        if fields[2].text_content().strip() == "Card 1 of 1":
 #            propdata = {}
