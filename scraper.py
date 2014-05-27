@@ -66,7 +66,7 @@ def queryBufferById(buffId):
         queryURL = "http://maps.nashville.gov/MetGIS/rest/services/Basemaps/Parcels/MapServer/0/query"
 #        print "buffId = " + json.dumps(buffId)
         r3 = requests.post(queryURL, data=qparams)
-#       print "r3.text = " + repr(r3.text)
+        print "r3.text = " + repr(r3.text)
         features = r3.json()
 #       print "Number of parcels returned: " + r3.text
 #       print "r3.url = " + repr(r3.url)
