@@ -64,14 +64,14 @@ def queryBufferById(buffId):
         qparams['returnCountOnly'] = False
 # print "qparams = " + repr(qparams)
         queryURL = "http://maps.nashville.gov/MetGIS/rest/services/Basemaps/Parcels/MapServer/0/query"
-        print "buffId = " + json.dumps(buffId)
-# r3 = requests.post(queryURL, data=qparams)
-# print "r3.text = " + repr(r3.text)
-# features = r3.json()
-# print "Number of parcels returned: " + r3.text
-# print "r3.url = " + repr(r3.url)
-# for i in features['features']:
-# scraperwiki.sqlite.save(unique_keys=["OBJECTID"],data=i['attributes'],table_name="properties")
+#        print "buffId = " + json.dumps(buffId)
+        r3 = requests.post(queryURL, data=qparams)
+#       print "r3.text = " + repr(r3.text)
+        features = r3.json()
+#       print "Number of parcels returned: " + r3.text
+#       print "r3.url = " + repr(r3.url)
+        for i in features['features']:
+            scraperwiki.sqlite.save(unique_keys=["OBJECTID"],data=i['attributes'],table_name="properties")
 
 def queryBufferCount(buff):
         qparams = {}
@@ -89,16 +89,13 @@ def queryBufferCount(buff):
 # print "r3.text = " + repr(r3.text)
         features = r3.json()
         print repr(len(features['objectIds'])) + " features identified."
-        if len(features['objectIds']) > 500:
+        if len(features['objectIds']) > 10:
             j = 0
             while j < len(features['objectIds']):
                 buff = features['objectIds'][j:j+49]
                 print "Getting objectIds " + repr(j+1) + " thru " + repr(j+50) + "."
                 queryBufferById(buff)
                 j += 50
-            buff = features['objectIds'][j:(len(features['objectIds'])-1)]
-            print "Getting objectIds " + repr(j+1) + " thru " + repr(len(features['objectIds'])) + "."
-            queryBufferById(buff)
             print repr(len(features['objectIds'])) + " features saved."
         else:
             queryBuffer(buff)
@@ -156,7 +153,7 @@ def getParcelFeature(parcelID,distance):
             getGeoBuffer(feat['features'][0]['geometry'],distance)
             #print "testing"
 
-getParcelFeature("11714006400",1900)
+getParcelFeature("11714006400",300)
       
 def getAppraisal(propID,parcelID):
     try:
