@@ -183,7 +183,7 @@ def getAppraisal(objectID,parcelID):
             data = card.cssselect('td')
             i = 0
             while i < len(data):
-                print "data[i]: " + repr(data[i])
+                print "data[" + repr(i) + "]: " + data[i].text_content()
                 i += 1
 #        neighborhood = fields[49].text_content().strip()
 #        apprData = {'parcelID': parcelID,
