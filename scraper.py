@@ -165,7 +165,7 @@ def getParcelFeature(parcelID,distance):
             #print "testing"
 
 def getAppraisal(objectID,parcelID):
-        print "Getting appraisal data for parcel " + repr(parcelID).encode('ascii') + "."
+        print "Getting appraisal data for parcel " + parcelID + "."
 #    try:
     # print "propID = " + propID + "."
         pageURL = "http://www.padctnwebpro.com/WebproNashville/searchResults.asp?cboSearchType=Parcel&SearchVal1=" + repr(parcelID).encode('ascii')
