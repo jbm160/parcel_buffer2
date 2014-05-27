@@ -169,7 +169,7 @@ def getAppraisal(objectID,parcelID):
         cj = cookielib.CookieJar()
         opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(cj))
         html = lxml.html.parse(opener.open(pageURL)).getroot()
-        print "Response 1: \n" + repr(html)
+        print "Response 1: \n" + html.body().text_content()
         links = html.cssselect('a')
 #        newURL = "http://www.padctnwebpro.com/WebproNashville/" + links[0].get('href')
         newURL = "http://www.padctnwebpro.com/WebproNashville/Summary-bottom.asp?Card=1"
