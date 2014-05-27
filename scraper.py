@@ -165,7 +165,7 @@ def getParcelFeature(parcelID,distance):
 def getAppraisal(objectID,parcelID):
 #    try:
     # print "propID = " + propID + "."
-        pageURL = "http://www.padctnwebpro.com/WebproNashville/searchResults.asp?cboSearchType=Parcel&SearchVal1=" + parcelID
+        pageURL = "http://www.padctnwebpro.com/WebproNashville/searchResults.asp?cboSearchType=Parcel&SearchVal1=" + repr(parcelID)
         cj = cookielib.CookieJar()
         opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(cj))
         html = lxml.html.parse(opener.open(pageURL)).getroot()
