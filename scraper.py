@@ -195,14 +195,14 @@ def getAppraisal(objectID,parcelID):
         if numPages > 1:
             i = 2
 #            print "After Card 1, propdata = " + repr(propdata)
-        while i <= numPages:
-            newURL2 = "http://www.padctnwebpro.com/WebproNashville/Summary-bottom.asp?Card=" + repr(i)
-            record2 = lxml.html.parse(opener.open(newURL2)).getroot()
-            card = lxml.html.parse(opener.open("http://www.padctnwebpro.com/WebproNashville/RecordCard.asp")).getroot()
-            data = card.cssselect('td')
-            propdata['numUnits'] += strtoint(data[67].text_content().strip())
-            propdata['finSqFt'] += strtoint(data[81].text_content().strip())
-            i += 1
+            while i <= numPages:
+                newURL2 = "http://www.padctnwebpro.com/WebproNashville/Summary-bottom.asp?Card=" + repr(i)
+                record2 = lxml.html.parse(opener.open(newURL2)).getroot()
+                card = lxml.html.parse(opener.open("http://www.padctnwebpro.com/WebproNashville/RecordCard.asp")).getroot()
+                data = card.cssselect('td')
+                propdata['numUnits'] += strtoint(data[67].text_content().strip())
+                propdata['finSqFt'] += strtoint(data[81].text_content().strip())
+                i += 1
         return(propdata)
 #            print "After Card " + repr(i) + ", propdata = " + repr(propdata)
 #        if fields[2].text_content().strip() == "Card 1 of 1":
