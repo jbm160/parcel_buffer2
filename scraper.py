@@ -184,7 +184,7 @@ def getAppraisal(objectID,parcelID):
             data = card.cssselect('td')
             print fields[2].text_content().strip()
             j = True
-            if j = True:
+            if j:
                 i = 0
                 while i < len(data):
                     if data[i].text_content().strip().encode('ascii','ignore').find("\n") == -1:
